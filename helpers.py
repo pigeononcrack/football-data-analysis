@@ -24,7 +24,15 @@ def team_names(dataframe, team_id_column, team_column_name):
         columns = {"team_long_name" : team_column_name}
     )
     return dataframe
-        
+
+
+"""
+
+function below takes dataframe match with columns specifically named home_team_goal and away_team_goal
+creates new column with match result  
+adds it to the dataframe 
+
+"""
 
 def result(dataframe):
     conditions = [
@@ -35,3 +43,27 @@ def result(dataframe):
     choices = ['home_win', 'away_win', 'draw']
     dataframe['result'] = np.select(conditions, choices, default='Unknown')
     return dataframe
+
+"""
+
+function below takes dataframe with column with league_id and creates a new column
+the idea is to change unreadable id to league name, so we'll have better understanding of the data
+
+"""
+
+def league_names(dataframe):
+    
+    leagues_df = pd.read_sql("SELECT id, name FROM league", conn, index_col = "id")
+    
+    dataframe = dataframe.merge(
+        leagues_df,
+        left_on = "league_id",
+        right_index = True,
+        how = "left"
+    )
+    dataframe = dataframe.rename(
+        columns = {"name" : "League"}
+    )
+    dataframe = dataframe.drop("league_id", axis = 1)
+    return dataframe
+   
