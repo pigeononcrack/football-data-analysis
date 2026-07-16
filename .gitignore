@@ -1,2 +1,5 @@
 *.sqlite
 *.db
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
